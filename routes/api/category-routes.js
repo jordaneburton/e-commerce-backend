@@ -10,11 +10,6 @@ router.get('/', async (req, res) => {
     const catData = await Category.findAll({
       include:[Product]
     })
-    if (!catData) {
-      res.status(404).json({ message: 'No category found with this id!' });
-      return;
-    }
-
     return res.status(200).json(catData);
   }catch(err){
     return res.status(500).json(err);
@@ -60,7 +55,10 @@ router.put('/:id', async (req, res) => {
         id: req.params.id,
       },
     })
-    if (!catData) {
+    const checkData = await Category.findOne({
+      where:{id: req.params.id}
+    })
+    if (!checkData) {
       res.status(404).json({ message: 'No category found with this id!' });
       return;
     }
